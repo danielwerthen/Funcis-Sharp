@@ -114,7 +114,7 @@ namespace FuncisSharp
 
 		private Token Next()
 		{
-			return _next().First(row => row != null);
+			return _next().FirstOrDefault(row => row != null);
 		}
 
 		private IEnumerable<Token> Parse()

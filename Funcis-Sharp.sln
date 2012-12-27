@@ -3,6 +3,8 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Express 2012 for Windows Desktop
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Funcis-Sharp", "Funcis-Sharp\Funcis-Sharp.csproj", "{FF0677EA-A7ED-43CC-B256-6FB7931D08DF}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ParserTests", "ParserTests\ParserTests.csproj", "{01D02B33-3F61-4F7E-8F07-AAD868AECD7B}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -13,6 +15,10 @@ Global
 		{FF0677EA-A7ED-43CC-B256-6FB7931D08DF}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{FF0677EA-A7ED-43CC-B256-6FB7931D08DF}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{FF0677EA-A7ED-43CC-B256-6FB7931D08DF}.Release|Any CPU.Build.0 = Release|Any CPU
+		{01D02B33-3F61-4F7E-8F07-AAD868AECD7B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{01D02B33-3F61-4F7E-8F07-AAD868AECD7B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{01D02B33-3F61-4F7E-8F07-AAD868AECD7B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{01D02B33-3F61-4F7E-8F07-AAD868AECD7B}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
