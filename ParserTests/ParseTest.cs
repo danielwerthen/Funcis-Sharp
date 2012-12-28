@@ -3,6 +3,7 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System.Text;
 using System.Linq;
 using FuncisSharp;
+using Newtonsoft.Json.Linq;
 
 namespace ParserTests
 {
@@ -10,8 +11,9 @@ namespace ParserTests
 	public class ParseTest
 	{
 		[TestMethod]
-		public void TestMethod1()
+		public void ParseTester()
 		{
+
 			StringBuilder sb = new StringBuilder();
 			sb.AppendLine("NodeA.Add(1,2)");
 			sb.AppendLine("\t(res) =>");

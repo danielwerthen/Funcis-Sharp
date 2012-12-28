@@ -66,7 +66,7 @@ namespace FuncisSharp
 			var par = this.Scan("^[\\(,] *({.*}|\\w+|\'.*\'|\".*\") *", Types.Param);
 			if (par != null)
 			{
-				par.Val = Regex.Replace(par.Val, @"( *{ *| *, *)\'?(\w+)\'? *: *", "$1\"$2\": ", RegexOptions.Multiline);
+				par.Val = Regex.Replace(par.Val, @"( *{ *| *, *)\'?(\w+)\'? *: *", "${1}\"${2}\": ", RegexOptions.Multiline);
 			}
 			return par;
 		}
@@ -159,7 +159,7 @@ namespace FuncisSharp
 		public string Name { get; set; }
 		public string Selector { get; set; }
 		public List<Parameter> Parameters { get; set; }
-		public List<Parameter> CallbackParameters { get; set; }
+		public List<CallbackParameter> CallbackParameters { get; set; }
 		public List<Function> Callbacks { get; set; }
 
 		public Function(string selector, string name, List<Parameter> parameters)
@@ -169,13 +169,47 @@ namespace FuncisSharp
 			this.Parameters = parameters;
 			if (this.Parameters == null)
 				this.Parameters = new List<Parameter>();
-			this.CallbackParameters = new List<Parameter>();
+			this.CallbackParameters = new List<CallbackParameter>();
 			this.Callbacks = new List<Function>();
+		}
+
+		public override string ToString()
+		{
+			return this.ToString("");
+		}
+
+		public string ToString(string indents)
+		{
+			if (indents == null) indents = "";
+			string result = indents + (!string.IsNullOrEmpty(this.Selector) ? this.Selector + "." : "")
+				+ this.Name + "(" + string.Join(", ", this.Parameters.Select(row => row.ToString())) + ")";
+			if (this.CallbackParameters.Count > 0)
+			{
+				indents += "\t";
+				result += "\n" + indents + "(" + string.Join(", ", this.CallbackParameters.Select(row => row.ToString())) + ") =>";
+			}
+			foreach (var cb in this.Callbacks)
+			{
+				result += "\n" + cb.ToString(indents + "\t");
+			}
+			return result;
 		}
 	}
 
-	public class Parameter
+	public static class FunctionExtensions
 	{
+		public static string Print(this IEnumerable<Function> functions)
+		{
+			var str = "";
+			foreach (var f in functions)
+				str += f.ToString();
+			return str;
+		}
+	}
+
+	public abstract class Parameter
+	{
+		public abstract JToken Build(JObject scope);
 	}
 
 	public class StringParameter : Parameter
@@ -185,14 +219,24 @@ namespace FuncisSharp
 		{
 			this.Value = str;
 		}
+
+		public override JToken Build(JObject scope)
+		{
+			return new JValue(Value);
+		}
 	}
 
 	public class ConstantParameter : Parameter
 	{
-		public JObject Value { get; set; }
-		public ConstantParameter(JObject jo) 
+		public JValue Value { get; set; }
+		public ConstantParameter(JValue jo) 
 		{
 			this.Value = jo;
+		}
+
+		public override JToken Build(JObject scope)
+		{
+			return Value;
 		}
 	}
 
@@ -202,6 +246,45 @@ namespace FuncisSharp
 		public ArgumentParameter(string str)
 		{
 			Value = str;
+		}
+
+		private string Resolve(JObject scope)
+		{
+			var str = Value;
+			foreach (var key in scope.Properties())
+			{
+				var name = key.Name;
+				str = Regex.Replace(str, "(: *)(" + name + ")", "${1}" + scope.GetValue(name).ToString());
+			}
+			return str;
+		}
+
+		public override JToken Build(JObject scope)
+		{
+			if (Regex.Match(Value, "{").Success)
+			{
+				var str = Resolve(scope);
+				return JObject.Parse(str);
+			}
+			return scope.GetValue(Value);
+		}
+	}
+
+	public class CallbackParameter
+	{
+		public string Name { get; set; }
+		public CallbackParameter(string name)
+		{
+			Name = name;
+		}
+	}
+
+	public static class ParameterExtensions
+	{
+		public static JArray Build(this IEnumerable<Parameter> paras, JObject scope)
+		{
+			return new JArray(paras.Select(para =>
+				para.Build(scope)).ToArray());
 		}
 	}
 
@@ -241,7 +324,7 @@ namespace FuncisSharp
 				{
 					if (tokens[0].Type == Types.Param)
 					{
-						var args = tokens.GetParams();
+						var args = tokens.GetCallbackParams();
 						if (f.CallbackParameters.Count > 0)
 						{
 							throw new Exception("Unknown syntax error at line: " + tokens[0].Line);
@@ -266,6 +349,20 @@ namespace FuncisSharp
 			return null;
 		}
 
+		internal static List<CallbackParameter> GetCallbackParams(this List<Token> tokens)
+		{
+			var paras = new List<CallbackParameter>();
+			while (tokens.Count > 0 && tokens[0].Type == Types.Param)
+			{
+				var param = tokens[0];
+				tokens.RemoveAt(0);
+				paras.Add(new CallbackParameter(param.Val));
+			}
+			if (tokens.Count > 0 && tokens[0].Type == Types.ParamStop)
+				tokens.RemoveAt(0);
+			return paras;
+		}
+
 		internal static List<Parameter> GetParams(this List<Token> tokens)
 		{
 			var paras = new List<Parameter>();
@@ -285,8 +382,8 @@ namespace FuncisSharp
 					}
 					else
 					{
-						var jo = JObject.Parse(param.Val);
-						paras.Add(new ConstantParameter(jo));
+						var jo = JValue.Parse(param.Val);
+						paras.Add(new ConstantParameter((JValue)jo));
 					}
 				}
 				catch (Exception)
