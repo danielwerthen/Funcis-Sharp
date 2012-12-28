@@ -89,5 +89,30 @@ namespace FuncisSharp
 				exe.Send(data);
 			}
 		}
+
+		public void HandleCall(JObject data)
+		{
+			JToken signature;
+			if (!data.TryGetValue("signature", out signature)) return;
+			if (signature.Value<string>() != this.Signature) return;
+			JToken pos, scope;
+			if (data.TryGetValue("pos", out pos) && pos is JArray && data.TryGetValue("scope", out scope) && scope is JObject)
+			{
+				this.Execute(pos.Values().Select(row => row.Value<int>()).ToArray(), (JObject)scope, true);
+			}
+		}
+
+		public void Start()
+		{
+			for (var i = 0; i < Funcs.Count; i++)
+			{
+				Execute(new int[1] { i }, new JObject(), true);
+			}
+		}
+
+		public void Stop()
+		{
+			this.Context.EmitStop();
+		}
 	}
 }
