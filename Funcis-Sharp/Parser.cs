@@ -224,6 +224,11 @@ namespace FuncisSharp
 		{
 			return new JValue(Value);
 		}
+
+		public override string ToString()
+		{
+			return Value;
+		}
 	}
 
 	public class ConstantParameter : Parameter
@@ -237,6 +242,11 @@ namespace FuncisSharp
 		public override JToken Build(JObject scope)
 		{
 			return Value;
+		}
+
+		public override string ToString()
+		{
+			return Value.ToString();
 		}
 	}
 
@@ -268,6 +278,11 @@ namespace FuncisSharp
 			}
 			return scope.GetValue(Value);
 		}
+
+		public override string ToString()
+		{
+			return Value;
+		}
 	}
 
 	public class CallbackParameter
@@ -276,6 +291,11 @@ namespace FuncisSharp
 		public CallbackParameter(string name)
 		{
 			Name = name;
+		}
+
+		public override string ToString()
+		{
+			return Name;
 		}
 	}
 

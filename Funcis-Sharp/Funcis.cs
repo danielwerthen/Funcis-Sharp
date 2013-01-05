@@ -26,6 +26,16 @@ namespace FuncisSharp
 			startFSWatch();
 		}
 
+		public async Task Listen()
+		{
+			foreach (var proxy in _proxies)
+			{
+				var data = await proxy.ReceiveAsync();
+				foreach (var sig in _signals.Values)
+					await sig.HandleCall(data);
+			}
+		}
+
 		private void startFSWatch()
 		{
 			FileSystemWatcher watcher = new FileSystemWatcher();

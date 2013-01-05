@@ -23,7 +23,7 @@ namespace FuncisSharp
 				return string.Format("http://{0}:{1}{2}",
 					Settings.HostName,
 					Settings.Port,
-					Settings.BasePath + "/connect");
+					Path.Combine(Settings.BasePath, "/connect"));
 			}
 		}
 

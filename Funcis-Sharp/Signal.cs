@@ -30,7 +30,8 @@ namespace FuncisSharp
 			MD5 md5 = MD5.Create();
 			byte[] inputBytes = Encoding.UTF8.GetBytes(str);
 			byte[] hash = md5.ComputeHash(inputBytes);
-			return hash.Aggregate(new StringBuilder(), (sb, b) => sb.Append(b.ToString("X2"))).ToString();
+			
+			return hash.Aggregate(new StringBuilder(), (sb, b) => sb.Append(b.ToString("X2"))).ToString().ToLower();
 		}
 
 		public void Load(string str)
@@ -62,7 +63,7 @@ namespace FuncisSharp
 			return nscope;
 		}
 
-		public void Execute(int[] pos, JObject scope, bool local)
+		public async Task Execute(int[] pos, JObject scope, bool local)
 		{
 			var f = this.Traverse(pos);
 			var self = this;
@@ -70,12 +71,12 @@ namespace FuncisSharp
 			foreach (LocalNode exe in this.Locals.Resolve(f.Selector)) 
 			{
 				var paras = f.Parameters.Build(scope);
-				exe.Call(this.Context, f.Name, paras, (args) =>
+				exe.Call(this.Context, f.Name, paras, async (args) =>
 				{
 					var newScope = Interpolate(f.CallbackParameters, args, scope);
 					for (var i = 0; i < f.CallbackParameters.Count; i++)
 					{
-						self.Execute(pos.Concat(new int[1] { i }).ToArray(), newScope, false);
+						await Execute(pos.Concat(new int[1] { i }).ToArray(), newScope, false);
 					}
 				});
 			}
@@ -86,11 +87,11 @@ namespace FuncisSharp
 				data["signature"] = self.Signature;
 				data["pos"] = new JArray(pos);
 				data["scope"] = scope;
-				exe.Send(data);
+				await exe.Send(data);
 			}
 		}
 
-		public void HandleCall(JObject data)
+		public async Task HandleCall(JObject data)
 		{
 			JToken signature;
 			if (!data.TryGetValue("signature", out signature)) return;
@@ -98,15 +99,15 @@ namespace FuncisSharp
 			JToken pos, scope;
 			if (data.TryGetValue("pos", out pos) && pos is JArray && data.TryGetValue("scope", out scope) && scope is JObject)
 			{
-				this.Execute(pos.Values().Select(row => row.Value<int>()).ToArray(), (JObject)scope, true);
+				await this.Execute(pos.Values().Select(row => row.Value<int>()).ToArray(), (JObject)scope, true);
 			}
 		}
 
-		public void Start()
+		public async Task Start()
 		{
 			for (var i = 0; i < Funcs.Count; i++)
 			{
-				Execute(new int[1] { i }, new JObject(), true);
+				await Execute(new int[1] { i }, new JObject(), true);
 			}
 		}
 

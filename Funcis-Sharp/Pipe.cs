@@ -67,7 +67,8 @@ namespace FuncisSharp
 				{
 					if (req == null)
 						createReq();
-					await req.WriteAsync(data.ToString());
+					await req.WriteAsync(data.ToString() + Settings.Delimiter);
+					await req.FlushAsync();
 					break;
 				}
 				catch (Exception)
@@ -98,7 +99,7 @@ namespace FuncisSharp
 				return string.Format("http://{0}:{1}{2}",
 					Settings.HostName,
 					Settings.Port,
-					Settings.BasePath + "/call");
+					Path.Combine(Settings.BasePath, "/call"));
 			}
 		}
 
