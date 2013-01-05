@@ -11,28 +11,10 @@ using System.Threading.Tasks;
 
 namespace FuncisSharp
 {
-	public class ProxyPipeSettings
-	{
-		public string HostName { get; set; }
-		public int Port { get; set; }
-		public string BasePath { get; set; }
-		public int Timeout { get; set; }
-		public string Delimiter { get; set; }
-		public string Secret { get; set; }
-
-		public ProxyPipeSettings()
-		{
-			HostName = "Localhost";
-			Port = 80;
-			BasePath = "";
-			Timeout = 30 * 1000;
-			Delimiter = "::";
-			Secret = "very_secret_key";
-		}
-	}
+	
 	public class ProxyPipe
 	{
-		public ProxyPipeSettings Settings { get; set; }
+		public PipeSettings Settings { get; set; }
 
 		private string Uri
 		{
@@ -59,10 +41,20 @@ namespace FuncisSharp
 				!string.IsNullOrEmpty(this.Id) ? string.Format(", \"id\": \"{0}\"", this.Id) : "");
 		}
 
-		public ProxyPipe(string nodes, ProxyPipeSettings settings = null)
+		public ProxyPipe(string nodes, PipeSettings settings = null)
 		{
-			Settings = settings != null ? settings : new ProxyPipeSettings();
+			Settings = settings != null ? settings : new PipeSettings();
 			Nodes = nodes;
+		}
+
+		public ProxyPipe(NodeMap<LocalNode> locals, string uri)
+		{
+			Settings = new PipeSettings();
+			var u = new Uri(uri);
+			Settings.HostName = u.Host;
+			Settings.Port = u.Port;
+			Settings.BasePath = u.PathAndQuery;
+			Nodes = new JArray(locals.Nodes.Select(node => new JObject(new JProperty("name", node.Name), new JProperty("classes", node.Classes)))).ToString();
 		}
 
 		public bool CanSend

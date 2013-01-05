@@ -6,26 +6,30 @@ using System.Text.RegularExpressions;
 
 namespace FuncisSharp
 {
-	public class NodeMap
+	public class NodeMap<N> where N : Node
 	{
-		public Type NodeType { get; set; }
-		private Dictionary<string, Node> _nodes = new Dictionary<string, Node>();
+		private Dictionary<string, N> _nodes = new Dictionary<string, N>();
 
-		public NodeMap(Type nodeType)
+		public NodeMap()
 		{
-			NodeType = nodeType;
 		}
 
-		public void AddNode(Node node)
+		public void AddNode(N node)
 		{
-			if (node.GetType() != NodeType)
-				throw new Exception("Node types in map must be the same");
 			_nodes[node.Name] = node;
 		}
 
-		public void RemoteNode(string name)
+		public void RemoveNode(string name)
 		{
 			_nodes[name] = null;
+		}
+
+		public IEnumerable<N> Nodes
+		{
+			get
+			{
+				return _nodes.Values;
+			}
 		}
 
 		private static string Name(string str)
@@ -53,7 +57,7 @@ namespace FuncisSharp
 			return res;
 		}
 
-		private Func<Node, bool> Match(string name)
+		private Func<N, bool> Match(string name)
 		{
 			return (node) =>
 				{
@@ -61,7 +65,7 @@ namespace FuncisSharp
 				};
 		}
 
-		private Func<Node, bool> Match(List<string> classes)
+		private Func<N, bool> Match(List<string> classes)
 		{
 			return (node) =>
 				{
@@ -69,9 +73,9 @@ namespace FuncisSharp
 				};
 		}
 
-		private Func<Node, bool> Match(string name, List<string> classes)
+		private Func<N, bool> Match(string name, List<string> classes)
 		{
-			List<Func<Node, bool>> matches = new List<Func<Node, bool>>();
+			List<Func<N, bool>> matches = new List<Func<N, bool>>();
 
 			if (!string.IsNullOrEmpty(name))
 				matches.Add(Match(name));
@@ -80,7 +84,7 @@ namespace FuncisSharp
 			return (node) => matches.All(row => row(node));
 		}
 
-		public IEnumerable<Node> Resolve(string p)
+		public IEnumerable<N> Resolve(string p)
 		{
 			var name = Name(p);
 			var classes = Classes(p);

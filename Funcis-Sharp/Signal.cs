@@ -10,13 +10,13 @@ namespace FuncisSharp
 {
 	public class Signal
 	{
-		public NodeMap Locals { get; set; }
-		public NodeMap Remotes { get; set; }
+		public NodeMap<LocalNode> Locals { get; set; }
+		public NodeMap<RemoteNode> Remotes { get; set; }
 		public string Signature { get; set; }
 		public List<Function> Funcs { get; set; }
 		private SignalContext Context { get; set; }
 
-		public Signal(NodeMap locals, NodeMap remotes)
+		public Signal(NodeMap<LocalNode> locals, NodeMap<RemoteNode> remotes)
 		{
 			this.Locals = locals;
 			this.Remotes = remotes;

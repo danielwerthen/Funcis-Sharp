@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace FuncisSharp
 {
@@ -42,15 +43,17 @@ namespace FuncisSharp
 
 	public class RemoteNode : Node
 	{
-		public RemoteNode(string name, string[] classes)
+		private Pipe pipe;
+		public RemoteNode(Pipe pipe, string name, string[] classes)
 		{
 			this.Name = name;
 			this.Classes = classes;
+			this.pipe = pipe;
 		}
 
-		public void Send(JObject data)
+		public async Task Send(JObject data)
 		{
-
+			await pipe.Send(data);
 		}
 	}
 }

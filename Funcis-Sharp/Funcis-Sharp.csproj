@@ -42,10 +42,12 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Funcis.cs" />
     <Compile Include="FuncEx.cs" />
     <Compile Include="Node.cs" />
     <Compile Include="NodeMap.cs" />
     <Compile Include="Parser.cs" />
+    <Compile Include="Pipe.cs" />
     <Compile Include="ProxyPipe.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Signal.cs" />
