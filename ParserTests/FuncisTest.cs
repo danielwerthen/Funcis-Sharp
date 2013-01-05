@@ -13,8 +13,8 @@ namespace ParserTests
 		public void TestIt()
 		{
 			List<object> results = new List<object>();
-			NodeMap locals = new NodeMap(typeof(LocalNode));
-			NodeMap remotes = new NodeMap(typeof(RemoteNode));
+			NodeMap<LocalNode> locals = new NodeMap<LocalNode>();
+			NodeMap<RemoteNode> remotes = new NodeMap<RemoteNode>();
 			var NodeA = new LocalNode("NodeA", new string[] { "Calculator", "Printer" });
 			locals.AddNode(NodeA);
 			NodeA["Add"] = new FuncEx((sig, args, cb) =>
