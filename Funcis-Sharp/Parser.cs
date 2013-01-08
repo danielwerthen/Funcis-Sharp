@@ -63,7 +63,7 @@ namespace FuncisSharp
 
 		private Token Param()
 		{
-			var par = this.Scan("^[\\(,] *({.*}|\\w+|\'.*\'|\".*\") *", Types.Param);
+			var par = this.Scan("^[\\(,] *({.*}|/[.*/]|\\w+|\'.*\'|\".*\") *", Types.Param);
 			if (par != null)
 			{
 				par.Val = Regex.Replace(par.Val, @"( *{ *| *, *)\'?(\w+)\'? *: *", "${1}\"${2}\": ", RegexOptions.Multiline);

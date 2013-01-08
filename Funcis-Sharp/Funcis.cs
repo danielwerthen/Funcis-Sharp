@@ -48,7 +48,7 @@ namespace FuncisSharp
 			watcher.Renamed += watcher_Renamed;
 			watcher.EnableRaisingEvents = true;
 
-			foreach (var file in Directory.GetFiles(watcher.Path))
+			foreach (var file in Directory.GetFiles(watcher.Path, "*.is"))
 			{
 				var sig = File.ReadAllText(file);
 				AddSignal(Path.GetFileName(file), sig);

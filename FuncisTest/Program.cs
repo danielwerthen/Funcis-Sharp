@@ -13,7 +13,7 @@ namespace FuncisTest
 		static void Main(string[] argss)
 		{
 			var funcis = new Funcis();
-			var nodeA = funcis.CreateNode("NodeA", new string[] { "Calculator" });
+			var nodeA = funcis.CreateNode("Kv", new string[] { "Knx" });
 			nodeA["Add"] = new FuncEx((signal, args, cb) =>
 			{
 				Console.WriteLine("Add");
@@ -23,11 +23,14 @@ namespace FuncisTest
 			{
 				Console.WriteLine(args[0].Value<int>());
 			});
-			funcis.AddProxy("http://localhost:3000");
-			funcis.AddRemoteNode("http://localhost:3000", "NodeB", new string[] { "Printer" });
+			funcis.AddProxy("http://192.168.1.109:3000");
+			funcis.AddRemoteNode("http://192.168.1.109:3000", "Central", new string[0]);
 			//funcis.Start();
-			var t = funcis.Listen();
-			t.Wait();
+            while (true)
+            {
+                var t = funcis.Listen();
+                t.Wait();
+            }
 			Console.ReadLine();
 		}
 	}
