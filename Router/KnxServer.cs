@@ -8,11 +8,11 @@ namespace Knx.Router
 {
     public class KnxServer
     {
-        public static void Run(Action<ConcurrentTelegramGateway, KnxWriter> eventLoop, bool useDefault = true)
+        public static void Run(Action<TelegramGateway, KnxWriter> eventLoop, bool useDefault = true)
         {
             using (var router = new RouterActor(useDefault))
             {
-                ConcurrentTelegramGateway gateway = new ConcurrentTelegramGateway();
+                TelegramGateway gateway = new TelegramGateway();
                 LoosePipeline<ReceivedGroupTelegramEventArgs> pipe = new LoosePipeline<ReceivedGroupTelegramEventArgs>((args) =>
                 {
                     gateway.RouteGroupTelegram(args.Telegram);
