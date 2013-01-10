@@ -74,7 +74,7 @@ namespace FuncisSharp
 				exe.Call(this.Context, f.Name, paras, async (args) =>
 				{
 					var newScope = Interpolate(f.CallbackParameters, args, scope);
-					for (var i = 0; i < f.CallbackParameters.Count; i++)
+					for (var i = 0; i < f.Callbacks.Count; i++)
 					{
 						await Execute(pos.Concat(new int[1] { i }).ToArray(), newScope, false);
 					}

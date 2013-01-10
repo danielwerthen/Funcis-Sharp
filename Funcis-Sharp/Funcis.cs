@@ -107,7 +107,10 @@ namespace FuncisSharp
 			var signal = new Signal(locals, remotes);
 			signal.Load(sig);
 			if (start)
-				signal.Start();
+			{
+				var t = signal.Start();
+				t.Wait();
+			}
 			RemoveSignal(name);
 			_signals[name] = signal;
 			return signal;
