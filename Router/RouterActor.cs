@@ -28,9 +28,8 @@ namespace Knx.Router
 
             if (falconConnection.guidEdi == Guid.Empty)
                 throw new Exception("Operation was aborted");
-
-            DeviceOpenError err = _connection.Open2("{" + falconConnection.guidEdi.ToString() + "}",
-                falconConnection.Parameters);
+						DeviceOpenError err = _connection.Open2("{" + falconConnection.guidEdi.ToString() + "}",
+									falconConnection.Parameters);
             if (err != DeviceOpenError.DeviceOpenErrorNoError)
             {
                 throw new InvalidOperationException(string.Format("Could not open connection: {0}", err.ToString()));
