@@ -202,7 +202,7 @@ namespace FuncisSharp
 		{
 			var str = "";
 			foreach (var f in functions)
-				str += f.ToString();
+				str += f.ToString() + "\n";
 			return str;
 		}
 	}
@@ -227,7 +227,7 @@ namespace FuncisSharp
 
 		public override string ToString()
 		{
-			return Value;
+			return "\"" + Value + "\"";
 		}
 	}
 

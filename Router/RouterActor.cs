@@ -17,11 +17,12 @@ namespace Knx.Router
         {
             ConnectionMode connectionMode = ConnectionMode.ConnectionModeRemoteConnectionless;
             IConnectionManager connectionManager = new ConnectionManager();
-            FalconConnection falconConnection;
-            if (useDefault)
-                falconConnection = connectionManager.GetDefaultConnection();
-            else
-                falconConnection = connectionManager.GetConnection("", 1);
+            FalconConnection falconConnection = default(FalconConnection);
+							if (useDefault)
+								falconConnection = connectionManager.GetDefaultConnection();
+							else
+								falconConnection = connectionManager.GetConnection("", 1);
+
             _connection = ConnectionObjectFactory.CreateUnlicensedConnectionObject(null);
             _auto = new AutoDisposeConnectionObject(_connection);
             _connection.Mode = connectionMode;

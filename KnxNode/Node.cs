@@ -30,6 +30,7 @@ namespace KnxNode
 			{
 				var funcis = new Funcis();
 				var node = funcis.CreateNode("Kv", new string[] { "Knx" });
+				SignalExtender.Register(funcis);
 				node["Listen"] = new FuncEx(new Action<SignalContext, JArray, Action<JArray>>((sig, args, cb) =>
 				{
 					if (args.Count < 1)
@@ -63,14 +64,17 @@ namespace KnxNode
 				});
 				funcis.AddProxy(url);
 				funcis.AddRemoteNode(url, "Central", new string[0]);
+				funcis.AddRemoteNode(url, "Me", new string[] { "Extender" });
 				var t = funcis.Start();
 				t.Wait();
 				Console.WriteLine("KnxNode is running");
 				funcis.BeginListen();
-				Console.WriteLine("Press any key to exit");
-				Console.ReadKey();
+				while (true)
+				{
+					Thread.Sleep(1000);
+				}
 				
-			}, false);
+			}, true);
 			return;
 		}
 	}

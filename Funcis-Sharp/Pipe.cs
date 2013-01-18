@@ -88,8 +88,15 @@ namespace FuncisSharp
 			req = null;
 			if (currentReq == null)
 				return;
-			var res = new StreamReader(currentReq.GetResponse().GetResponseStream());
-			res.Dispose();
+			try
+			{
+				var res = new StreamReader(currentReq.GetResponse().GetResponseStream());
+				res.Dispose();
+			}
+			catch (Exception e)
+			{
+				Console.WriteLine(e.ToString());
+			}
 		}
 
 		private string Uri

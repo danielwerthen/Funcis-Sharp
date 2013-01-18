@@ -52,6 +52,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Signal.cs" />
     <Compile Include="SignalContext.cs" />
+    <Compile Include="SignalExtender.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

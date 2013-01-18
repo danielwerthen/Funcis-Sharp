@@ -87,7 +87,7 @@ namespace FuncisSharp
 				}
 				catch (Exception e)
 				{
-					Console.WriteLine(e.Message);
+					Console.WriteLine(e.ToString());
 					buffer = "";
 					Thread.Sleep(500);
 				}
@@ -100,21 +100,24 @@ namespace FuncisSharp
 		{
 			while (true)
 			{
+				string str = null;
 				lock (_parseLock)
 				{
 					Monitor.Wait(_parseLock);
 					if (buffer == null)
 						continue;
 					var match = Regex.Match(buffer, "^(.+?)" + Settings.Delimiter);
-					string str = null;
 					if (match.Success)
 					{
 						var cap = match.Groups[1].Value;
 						buffer = buffer.Substring(match.Groups[0].Length);
 						str = cap;
 					}
-					if (string.IsNullOrEmpty(str))
-						continue;
+				}
+				if (string.IsNullOrEmpty(str))
+					continue;
+				try
+				{
 					var jo = JObject.Parse(str);
 					JToken id;
 					if (jo.TryGetValue("id", out id))
@@ -129,6 +132,10 @@ namespace FuncisSharp
 							Monitor.Pulse(_readLock);
 						}
 					}
+				}
+				catch (Exception e)
+				{
+					Console.WriteLine(e.ToString());
 				}
 			}
 		}

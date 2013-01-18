@@ -17,8 +17,8 @@ namespace ProcStarter
 			{
 				try
 				{
-					var t = await p.StandardOutput.ReadToEndAsync();
-					Console.Write(t);
+					var t = await p.StandardOutput.ReadLineAsync();
+					Console.WriteLine(t);
 				}
 				catch (Exception)
 				{

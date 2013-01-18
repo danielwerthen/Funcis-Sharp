@@ -18,6 +18,7 @@ namespace FuncisSharp
 		private List<ProxyPipe> _proxies = new List<ProxyPipe>();
 		
 		private Dictionary<string, Signal> _signals = new Dictionary<string, Signal>();
+		private readonly object _sigLock = new object();
 		private string sigPath { get; set; }
 
 		public Funcis(string sigPath = @"\Signals")
@@ -66,7 +67,11 @@ namespace FuncisSharp
 					JObject data;
 					if (_routedDatas.TryDequeue(out data))
 					{
-						var ts = _signals.Values.Select(row => row.HandleCall(data)).ToArray();
+						Task[] ts = null;
+						lock (_sigLock)
+						{
+							ts = _signals.Values.Select(row => row.HandleCall(data)).ToArray();
+						}
 						Task.WaitAll(ts);
 					}
 				}
@@ -79,10 +84,20 @@ namespace FuncisSharp
 			Task.WaitAll(listeners, 1000);
 		}
 
+		private FileSystemWatcher watcher;
+		public string GetWatchedPath()
+		{
+			if (watcher == null)
+				return null;
+			return watcher.Path;
+		}
 		private void startFSWatch()
 		{
-			FileSystemWatcher watcher = new FileSystemWatcher();
-			watcher.Path = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location) + sigPath;
+			var path = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location) + sigPath;
+			watcher = new FileSystemWatcher();
+			if (!Directory.Exists(path))
+				Directory.CreateDirectory(path);
+			watcher.Path = path;
 			watcher.NotifyFilter = NotifyFilters.LastWrite | NotifyFilters.FileName | NotifyFilters.DirectoryName;
 			watcher.Filter = "*.is";
 			watcher.Changed += watcher_Changed;
@@ -103,7 +118,6 @@ namespace FuncisSharp
 					{
 						foreach (var f in _toLoad.Distinct())
 						{
-							Console.WriteLine(Path.GetFileName(f));
 							var sig = File.ReadAllText(f);
 							AddSignal(Path.GetFileName(f), sig, true);
 						}
@@ -125,10 +139,13 @@ namespace FuncisSharp
 
 		void watcher_Renamed(object sender, RenamedEventArgs e)
 		{
-			if (_signals.ContainsKey(e.OldName))
+			lock (_sigLock)
 			{
-				_signals[e.Name] = _signals[e.OldName];
-				_signals[e.OldName] = null;
+				if (_signals.ContainsKey(e.OldName))
+				{
+					_signals[e.Name] = _signals[e.OldName];
+					_signals[e.OldName] = null;
+				}
 			}
 		}
 
@@ -136,7 +153,6 @@ namespace FuncisSharp
 		{
 			if (e.ChangeType == WatcherChangeTypes.Deleted)
 			{
-				Console.WriteLine("Removed " + e.Name);
 				RemoveSignal(e.Name);
 			}
 			else
@@ -154,17 +170,23 @@ namespace FuncisSharp
 				var t = signal.Start();
 				t.Wait();
 			}
-			RemoveSignal(name);
-			_signals[name] = signal;
+			lock (_sigLock)
+			{
+				RemoveSignal(name);
+				_signals[name] = signal;
+			}
 			return signal;
 		}
 
 		public void RemoveSignal(string name)
 		{
-			if (_signals.ContainsKey(name))
+			lock (_sigLock)
 			{
-				_signals[name].Stop();
-				_signals[name] = null;
+				if (_signals.ContainsKey(name))
+				{
+					_signals[name].Stop();
+					_signals[name] = null;
+				}
 			}
 		}
 
@@ -190,7 +212,12 @@ namespace FuncisSharp
 
 		public async Task Start()
 		{
-			foreach (var sig in _signals.Values)
+			List<Signal> sigs = null;
+			lock (_sigLock)
+			{
+				sigs = _signals.Values.ToList();
+			}
+			foreach (var sig in sigs)
 			{
 				await sig.Start();
 			}
