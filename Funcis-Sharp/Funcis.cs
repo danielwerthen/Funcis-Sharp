@@ -1,4 +1,6 @@
-﻿using System;
+﻿using Newtonsoft.Json.Linq;
+using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -34,6 +36,47 @@ namespace FuncisSharp
 				foreach (var sig in _signals.Values)
 					await sig.HandleCall(data);
 			}
+		}
+
+		ConcurrentQueue<JObject> _routedDatas = new ConcurrentQueue<JObject>();
+
+		CancellationTokenSource listenCancel;
+		Task[] listeners;
+		Task dataHandler;
+		public void BeginListen()
+		{
+			listenCancel = new CancellationTokenSource();
+			var token = listenCancel.Token;
+			listeners = _proxies.Select(proxy =>
+			{
+				return Task.Factory.StartNew(() =>
+				{
+					while (!token.IsCancellationRequested)
+					{
+						var t = proxy.ReceiveAsync();
+						t.Wait();
+						_routedDatas.Enqueue(t.Result);
+					}
+				}, token);
+			}).ToArray();
+			dataHandler = Task.Factory.StartNew(() =>
+			{
+				while (!token.IsCancellationRequested)
+				{
+					JObject data;
+					if (_routedDatas.TryDequeue(out data))
+					{
+						var ts = _signals.Values.Select(row => row.HandleCall(data)).ToArray();
+						Task.WaitAll(ts);
+					}
+				}
+			});
+		}
+
+		public void EndListen()
+		{
+			listenCancel.Cancel();
+			Task.WaitAll(listeners, 1000);
 		}
 
 		private void startFSWatch()
@@ -145,11 +188,11 @@ namespace FuncisSharp
 			return loc;
 		}
 
-		public void Start()
+		public async Task Start()
 		{
 			foreach (var sig in _signals.Values)
 			{
-				sig.Start();
+				await sig.Start();
 			}
 		}
 	}

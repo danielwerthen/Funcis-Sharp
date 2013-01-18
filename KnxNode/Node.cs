@@ -25,8 +25,6 @@ namespace KnxNode
 				var p = System.Diagnostics.Process.GetCurrentProcess();
 				p.Kill();
 			};
-			Thread.Sleep(10000);
-			throw new Exception("fail");
 
 			KnxServer.Run((gate, writer) =>
 			{
@@ -61,17 +59,16 @@ namespace KnxNode
 					EnmxAddress address = (string)args[0];
 					int val = (int)args[1];
 					Console.WriteLine("Sending to: " + address + " the value of " + val);
-					writer.Write(address, val);
+					//writer.Write(address, val);
 				});
 				funcis.AddProxy(url);
 				funcis.AddRemoteNode(url, "Central", new string[0]);
-				funcis.Start();
+				var t = funcis.Start();
+				t.Wait();
 				Console.WriteLine("KnxNode is running");
-				while (true)
-				{
-					var t = funcis.Listen();
-					t.Wait();
-				}
+				funcis.BeginListen();
+				Console.WriteLine("Press any key to exit");
+				Console.ReadKey();
 				
 			}, false);
 			return;
