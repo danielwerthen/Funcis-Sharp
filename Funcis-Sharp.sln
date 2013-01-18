@@ -13,6 +13,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Knx.Infrastructure", "Infra
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "KnxNode", "KnxNode\KnxNode.csproj", "{A8C90573-BA56-4E9C-98CE-3397BD53BBB2}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ProcStarter", "ProcStarter\ProcStarter.csproj", "{795D34FC-AD8E-4913-B57C-2DA7450210CA}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -79,6 +81,14 @@ Global
 		{A8C90573-BA56-4E9C-98CE-3397BD53BBB2}.Release|Any CPU.Build.0 = Release|Any CPU
 		{A8C90573-BA56-4E9C-98CE-3397BD53BBB2}.Release|x64.ActiveCfg = Release|Any CPU
 		{A8C90573-BA56-4E9C-98CE-3397BD53BBB2}.Release|x86.ActiveCfg = Release|Any CPU
+		{795D34FC-AD8E-4913-B57C-2DA7450210CA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{795D34FC-AD8E-4913-B57C-2DA7450210CA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{795D34FC-AD8E-4913-B57C-2DA7450210CA}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{795D34FC-AD8E-4913-B57C-2DA7450210CA}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{795D34FC-AD8E-4913-B57C-2DA7450210CA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{795D34FC-AD8E-4913-B57C-2DA7450210CA}.Release|Any CPU.Build.0 = Release|Any CPU
+		{795D34FC-AD8E-4913-B57C-2DA7450210CA}.Release|x64.ActiveCfg = Release|Any CPU
+		{795D34FC-AD8E-4913-B57C-2DA7450210CA}.Release|x86.ActiveCfg = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -17,6 +17,17 @@ namespace KnxNode
 	{
 		static void Main(string[] argss)
 		{
+			var url = argss.Count() > 0 ? argss[0] : "http://localhost:3000";
+			Console.WriteLine("Proxying to url: " + url);
+			AppDomain.CurrentDomain.UnhandledException += (sender, e) => {
+				var ex = e.ExceptionObject as Exception;
+				Console.WriteLine("Exited by unknown error: " + ex.Message);
+				var p = System.Diagnostics.Process.GetCurrentProcess();
+				p.Kill();
+			};
+			Thread.Sleep(10000);
+			throw new Exception("fail");
+
 			KnxServer.Run((gate, writer) =>
 			{
 				var funcis = new Funcis();
@@ -52,9 +63,10 @@ namespace KnxNode
 					Console.WriteLine("Sending to: " + address + " the value of " + val);
 					writer.Write(address, val);
 				});
-				funcis.AddProxy("http://localhost:3000");
-				funcis.AddRemoteNode("http://localhost:3000", "Central", new string[0]);
+				funcis.AddProxy(url);
+				funcis.AddRemoteNode(url, "Central", new string[0]);
 				funcis.Start();
+				Console.WriteLine("KnxNode is running");
 				while (true)
 				{
 					var t = funcis.Listen();
@@ -62,6 +74,7 @@ namespace KnxNode
 				}
 				
 			}, false);
+			return;
 		}
 	}
 }
