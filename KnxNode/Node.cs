@@ -30,15 +30,15 @@ namespace KnxNode
 					{
 						cb(new JArray(val, telegram.Received));
 					}));
-					Random r = new Random();
-					Timer t = new Timer((s) =>
-						{
-							cb(new JArray(r.Next(0, 255), DateTime.Now));
-						}, null, 1000, 1000);
+                    //Random r = new Random();
+                    //Timer t = new Timer((s) =>
+                    //    {
+                    //        cb(new JArray(r.Next(0, 255), DateTime.Now));
+                    //    }, null, 1000, 1000);
 					sig.OnStop(new Action(() =>
 					{
-						t.Change(Timeout.Infinite, Timeout.Infinite);
-						t.Dispose();
+                        //t.Change(Timeout.Infinite, Timeout.Infinite);
+                        //t.Dispose();
 						gate.RemoveGate(address);
 					}));
 				}));
@@ -50,7 +50,7 @@ namespace KnxNode
 					EnmxAddress address = (string)args[0];
 					int val = (int)args[1];
 					Console.WriteLine("Sending to: " + address + " the value of " + val);
-					//writer.Write(address, val);
+					writer.Write(address, val);
 				});
 				funcis.AddProxy("http://localhost:3000");
 				funcis.AddRemoteNode("http://localhost:3000", "Central", new string[0]);
