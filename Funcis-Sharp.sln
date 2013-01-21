@@ -1,6 +1,6 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 2012
+# Visual Studio Express 2012 for Windows Desktop
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Funcis-Sharp", "Funcis-Sharp\Funcis-Sharp.csproj", "{FF0677EA-A7ED-43CC-B256-6FB7931D08DF}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ParserTests", "ParserTests\ParserTests.csproj", "{01D02B33-3F61-4F7E-8F07-AAD868AECD7B}"
@@ -20,6 +20,8 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Knx.Integration", "Integration\Knx.Integration.csproj", "{D4E94196-025A-436B-B16A-C8E359C15EA2}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Knx.ObjectModel", "Knx.ObjectModel\Knx.ObjectModel.csproj", "{FC154D84-553F-4B5E-8D5B-60B0D534D060}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EtsProjectTranslator", "EtsProjectTranslator\EtsProjectTranslator.csproj", "{77E49E29-B450-4A98-93EB-80EA3A20E7B6}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -127,6 +129,14 @@ Global
 		{FC154D84-553F-4B5E-8D5B-60B0D534D060}.Release|x64.Build.0 = Release|x64
 		{FC154D84-553F-4B5E-8D5B-60B0D534D060}.Release|x86.ActiveCfg = Release|x86
 		{FC154D84-553F-4B5E-8D5B-60B0D534D060}.Release|x86.Build.0 = Release|x86
+		{77E49E29-B450-4A98-93EB-80EA3A20E7B6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{77E49E29-B450-4A98-93EB-80EA3A20E7B6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{77E49E29-B450-4A98-93EB-80EA3A20E7B6}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{77E49E29-B450-4A98-93EB-80EA3A20E7B6}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{77E49E29-B450-4A98-93EB-80EA3A20E7B6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{77E49E29-B450-4A98-93EB-80EA3A20E7B6}.Release|Any CPU.Build.0 = Release|Any CPU
+		{77E49E29-B450-4A98-93EB-80EA3A20E7B6}.Release|x64.ActiveCfg = Release|Any CPU
+		{77E49E29-B450-4A98-93EB-80EA3A20E7B6}.Release|x86.ActiveCfg = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

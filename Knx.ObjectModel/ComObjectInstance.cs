@@ -13,6 +13,7 @@ namespace Knx.ObjectModel
         }
 
         public string Id { get; internal set; }
+				public DatapointSubType DatapointType { get; internal set; }
 
         public DeviceInstance ParentDevice { get; set; }
 
