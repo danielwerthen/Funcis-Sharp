@@ -1,6 +1,6 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Express 2012 for Windows Desktop
+# Visual Studio 2012
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Funcis-Sharp", "Funcis-Sharp\Funcis-Sharp.csproj", "{FF0677EA-A7ED-43CC-B256-6FB7931D08DF}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ParserTests", "ParserTests\ParserTests.csproj", "{01D02B33-3F61-4F7E-8F07-AAD868AECD7B}"
@@ -16,6 +16,10 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ProcStarter", "ProcStarter\ProcStarter.csproj", "{795D34FC-AD8E-4913-B57C-2DA7450210CA}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "KnxDefaultFalcon", "KnxDefaultFalcon\KnxDefaultFalcon.csproj", "{0DE6719B-AE24-4879-B650-FF83DB56DFC7}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Knx.Integration", "Integration\Knx.Integration.csproj", "{D4E94196-025A-436B-B16A-C8E359C15EA2}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Knx.ObjectModel", "Knx.ObjectModel\Knx.ObjectModel.csproj", "{FC154D84-553F-4B5E-8D5B-60B0D534D060}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -99,6 +103,30 @@ Global
 		{0DE6719B-AE24-4879-B650-FF83DB56DFC7}.Release|Any CPU.Build.0 = Release|Any CPU
 		{0DE6719B-AE24-4879-B650-FF83DB56DFC7}.Release|x64.ActiveCfg = Release|Any CPU
 		{0DE6719B-AE24-4879-B650-FF83DB56DFC7}.Release|x86.ActiveCfg = Release|Any CPU
+		{D4E94196-025A-436B-B16A-C8E359C15EA2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D4E94196-025A-436B-B16A-C8E359C15EA2}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D4E94196-025A-436B-B16A-C8E359C15EA2}.Debug|x64.ActiveCfg = Debug|x64
+		{D4E94196-025A-436B-B16A-C8E359C15EA2}.Debug|x64.Build.0 = Debug|x64
+		{D4E94196-025A-436B-B16A-C8E359C15EA2}.Debug|x86.ActiveCfg = Debug|x86
+		{D4E94196-025A-436B-B16A-C8E359C15EA2}.Debug|x86.Build.0 = Debug|x86
+		{D4E94196-025A-436B-B16A-C8E359C15EA2}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D4E94196-025A-436B-B16A-C8E359C15EA2}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D4E94196-025A-436B-B16A-C8E359C15EA2}.Release|x64.ActiveCfg = Release|x64
+		{D4E94196-025A-436B-B16A-C8E359C15EA2}.Release|x64.Build.0 = Release|x64
+		{D4E94196-025A-436B-B16A-C8E359C15EA2}.Release|x86.ActiveCfg = Release|x86
+		{D4E94196-025A-436B-B16A-C8E359C15EA2}.Release|x86.Build.0 = Release|x86
+		{FC154D84-553F-4B5E-8D5B-60B0D534D060}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FC154D84-553F-4B5E-8D5B-60B0D534D060}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FC154D84-553F-4B5E-8D5B-60B0D534D060}.Debug|x64.ActiveCfg = Debug|x64
+		{FC154D84-553F-4B5E-8D5B-60B0D534D060}.Debug|x64.Build.0 = Debug|x64
+		{FC154D84-553F-4B5E-8D5B-60B0D534D060}.Debug|x86.ActiveCfg = Debug|x86
+		{FC154D84-553F-4B5E-8D5B-60B0D534D060}.Debug|x86.Build.0 = Debug|x86
+		{FC154D84-553F-4B5E-8D5B-60B0D534D060}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FC154D84-553F-4B5E-8D5B-60B0D534D060}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FC154D84-553F-4B5E-8D5B-60B0D534D060}.Release|x64.ActiveCfg = Release|x64
+		{FC154D84-553F-4B5E-8D5B-60B0D534D060}.Release|x64.Build.0 = Release|x64
+		{FC154D84-553F-4B5E-8D5B-60B0D534D060}.Release|x86.ActiveCfg = Release|x86
+		{FC154D84-553F-4B5E-8D5B-60B0D534D060}.Release|x86.Build.0 = Release|x86
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
