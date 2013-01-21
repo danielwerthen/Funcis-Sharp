@@ -49,7 +49,6 @@ namespace FuncisSharp
 			Settings.BasePath = u.PathAndQuery;
 			Nodes = new JArray(locals.Nodes.Select(node => new JObject(new JProperty("name", node.Name), new JProperty("classes", node.Classes)))).ToString();
 			var listen = Task.Run(() => _listen());
-			var parse = Task.Run(() => _parse());
 		}
 
 		private string innerBuffer = "";
@@ -79,17 +78,17 @@ namespace FuncisSharp
 							{
 								
 								innerBuffer += (char)res.Read();
-								if (innerBuffer != null && innerBuffer.EndsWith(Settings.Delimiter))
+								if (innerBuffer != null && innerBuffer.Contains(Settings.Delimiter))
 								{
 									var match = Regex.Match(innerBuffer, "^(.+?)" + Settings.Delimiter);
 									if (match.Success)
 									{
 										var cap = match.Groups[1].Value;
 										innerBuffer = innerBuffer.Substring(match.Groups[0].Length);
-										bufferQueue.Enqueue(cap);
+                                        bufferQueue.Enqueue(cap);
+                                        lock (_parseLock)
+                                            Monitor.Pulse(_parseLock);
 									}
-									lock (_parseLock)
-										Monitor.Pulse(_parseLock);
 								}
 							} 
 						}
@@ -106,56 +105,55 @@ namespace FuncisSharp
 		}
 
 		readonly object _parseLock = new object();
-		Queue<JObject> _datas = new Queue<JObject>();
-		private void _parse()
+		private JObject parse(string str)
 		{
-			while (true)
+			if (string.IsNullOrEmpty(str))
+				return  null;
+			try
 			{
-				string str = null;
-				lock (_parseLock)
+				var jo = JObject.Parse(str);
+				JToken id;
+				if (jo.TryGetValue("id", out id))
 				{
-					Monitor.Wait(_parseLock);
-					if (bufferQueue.Count == 0)
-						continue;
-					str = bufferQueue.Dequeue();
+					this.Id = id.Value<string>();
+                    return null;
 				}
-				if (string.IsNullOrEmpty(str))
-					continue;
-				try
+				else
 				{
-					var jo = JObject.Parse(str);
-					JToken id;
-					if (jo.TryGetValue("id", out id))
-					{
-						this.Id = id.Value<string>();
-					}
-					else
-					{
-						lock (_readLock)
-						{
-							_datas.Enqueue(jo);
-							Monitor.Pulse(_readLock);
-						}
-					}
+                    return jo;
 				}
-				catch (Exception e)
-				{
-					Console.WriteLine(str);
-					Console.WriteLine(e.ToString());
-				}
+			}
+			catch (Exception e)
+			{
+				Console.WriteLine(str);
+				Console.WriteLine(e.ToString());
+                return null;
 			}
 		}
 
-		readonly object _readLock = new object();
 		public async Task<JObject> ReceiveAsync()
 		{
 			return await Task.Run(() =>
 			{
-				lock (_readLock)
-				{
-					Monitor.Wait(_readLock);
-					return _datas.Dequeue();
-				}
+                while (true)
+                {
+                    if (bufferQueue.Count == 0)
+                    {
+                        lock (_parseLock)
+                        {
+                            Monitor.Wait(_parseLock);
+                        }
+                    }
+                    JObject jo = null;
+                    do
+                    {
+                        var item = bufferQueue.Dequeue();
+                        jo = parse(item);
+                    } while (jo == null && bufferQueue.Count > 0);
+                    if (jo == null)
+                        continue;
+                    return jo;
+                }
 			});
 			//var jo = await _receiveAsync();
 			//return jo;
