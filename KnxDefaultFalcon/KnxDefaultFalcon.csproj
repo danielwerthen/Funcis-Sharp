@@ -4,11 +4,11 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{795D34FC-AD8E-4913-B57C-2DA7450210CA}</ProjectGuid>
+    <ProjectGuid>{0DE6719B-AE24-4879-B650-FF83DB56DFC7}</ProjectGuid>
     <OutputType>Exe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>ProcStarter</RootNamespace>
-    <AssemblyName>ProcStarter</AssemblyName>
+    <RootNamespace>KnxDefaultFalcon</RootNamespace>
+    <AssemblyName>KnxDefaultFalcon</AssemblyName>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>
@@ -32,9 +32,6 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Newtonsoft.Json">
-      <HintPath>..\packages\Newtonsoft.Json.4.5.11\lib\net40\Newtonsoft.Json.dll</HintPath>
-    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
@@ -44,18 +41,20 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="HttpServer.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
-    <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\KnxNode\KnxNode.csproj">
-      <Project>{a8c90573-ba56-4e9c-98ce-3397bd53bbb2}</Project>
-      <Name>KnxNode</Name>
+    <ProjectReference Include="..\Infrastructure\Knx.Infrastructure.csproj">
+      <Project>{5591727e-1521-4aa5-9ddc-ec05e7ac73f9}</Project>
+      <Name>Knx.Infrastructure</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Router\Knx.Router.csproj">
+      <Project>{2d178cc4-a582-42cf-ba91-8de872d3e451}</Project>
+      <Name>Knx.Router</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

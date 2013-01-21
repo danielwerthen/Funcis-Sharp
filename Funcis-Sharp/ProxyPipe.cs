@@ -52,6 +52,8 @@ namespace FuncisSharp
 			var parse = Task.Run(() => _parse());
 		}
 
+		private string innerBuffer = "";
+		private Queue<string> bufferQueue = new Queue<string>();
 		private void _listen()
 		{
 			while (true)
@@ -76,14 +78,23 @@ namespace FuncisSharp
 							while (!res.EndOfStream)
 							{
 								
-								buffer += (char)res.Read();
-								if (buffer.EndsWith(Settings.Delimiter))
+								innerBuffer += (char)res.Read();
+								if (innerBuffer != null && innerBuffer.EndsWith(Settings.Delimiter))
+								{
+									var match = Regex.Match(innerBuffer, "^(.+?)" + Settings.Delimiter);
+									if (match.Success)
+									{
+										var cap = match.Groups[1].Value;
+										innerBuffer = innerBuffer.Substring(match.Groups[0].Length);
+										bufferQueue.Enqueue(cap);
+									}
 									lock (_parseLock)
 										Monitor.Pulse(_parseLock);
+								}
 							} 
 						}
 					}
-					buffer = null;
+					innerBuffer = null;
 				}
 				catch (Exception e)
 				{
@@ -104,15 +115,9 @@ namespace FuncisSharp
 				lock (_parseLock)
 				{
 					Monitor.Wait(_parseLock);
-					if (buffer == null)
+					if (bufferQueue.Count == 0)
 						continue;
-					var match = Regex.Match(buffer, "^(.+?)" + Settings.Delimiter);
-					if (match.Success)
-					{
-						var cap = match.Groups[1].Value;
-						buffer = buffer.Substring(match.Groups[0].Length);
-						str = cap;
-					}
+					str = bufferQueue.Dequeue();
 				}
 				if (string.IsNullOrEmpty(str))
 					continue;
@@ -135,6 +140,7 @@ namespace FuncisSharp
 				}
 				catch (Exception e)
 				{
+					Console.WriteLine(str);
 					Console.WriteLine(e.ToString());
 				}
 			}
