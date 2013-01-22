@@ -17,7 +17,7 @@ namespace KnxNode
 	{
 		static void Main(string[] argss)
 		{
-			var url = argss.Count() > 0 ? argss[0] : "http://localhost:3000";
+			var url = argss.Count() > 0 ? argss[0] : "http://kod-test.azurewebsites.net/";
 			Console.WriteLine("Proxying to url: " + url);
 			AppDomain.CurrentDomain.UnhandledException += (sender, e) => {
 				var ex = e.ExceptionObject as Exception;

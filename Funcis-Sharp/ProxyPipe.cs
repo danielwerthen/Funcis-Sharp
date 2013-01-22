@@ -21,7 +21,7 @@ namespace FuncisSharp
 		{
 			get
 			{
-				return string.Format("http://{0}:{1}{2}",
+				return string.Format("http://{0}{2}",
 					Settings.HostName,
 					Settings.Port,
 					Path.Combine(Settings.BasePath, "/connect"));
