@@ -163,19 +163,22 @@ namespace FuncisSharp
 
 		public Signal AddSignal(string name, string sig, bool start = false)
 		{
-			var signal = new Signal(locals, remotes);
-			signal.Load(sig);
-			if (start)
-			{
-				var t = signal.Start();
-				t.Wait();
-			}
-			lock (_sigLock)
-			{
+            lock (_sigLock)
+            {
 				RemoveSignal(name);
+
+    			var signal = new Signal(locals, remotes);
+
+    			signal.Load(sig);
+
+    			if (start)
+    			{
+    				var t = signal.Start();
+    				t.Wait();
+    			}
 				_signals[name] = signal;
+    			return signal;
 			}
-			return signal;
 		}
 
 		public void RemoveSignal(string name)

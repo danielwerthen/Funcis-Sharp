@@ -37,7 +37,7 @@ namespace FuncisSharp
 				{
 					if (ev == "loaded")
 					{
-						File.WriteAllText(Path.Combine(funcis.GetWatchedPath(), name), signal);
+						File.WriteAllText(Path.Combine(funcis.GetWatchedPath(), name), signal.Replace("\n", "\r\n"));
 					}
 					else if (ev == "removed")
 					{

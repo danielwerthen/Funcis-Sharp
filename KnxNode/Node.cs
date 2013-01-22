@@ -29,19 +29,22 @@ namespace KnxNode
 			KnxServer.Run((gate, writer) =>
 			{
 				var funcis = new Funcis();
-				var node = funcis.CreateNode("Kv", new string[] { "Knx" });
+				var node = funcis.CreateNode("KNX", new string[] { "Knx" });
 				SignalExtender.Register(funcis);
 				node["Listen"] = new FuncEx(new Action<SignalContext, JArray, Action<JArray>>((sig, args, cb) =>
 				{
 					if (args.Count < 1)
 						return;
 					EnmxAddress address = (string)args[0];
+                    Console.WriteLine("Listen to " + address.Address);
 					gate.ConstructGate<int>(address, new Action<int,GroupTelegram>((val, telegram) =>
 					{
+                        Console.WriteLine("Received from " + address.Address + " value of " + val);
 						cb(new JArray(val, telegram.Received));
 					}));
 					sig.OnStop(new Action(() =>
 					{
+                        Console.WriteLine("Stop listen to " + address.Address);
 						gate.RemoveGate(address);
 					}));
 				}));
