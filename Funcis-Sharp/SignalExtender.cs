@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -21,11 +22,13 @@ namespace FuncisSharp
 .Extender.Listen()
 	(event, signal, name) =>
 		.Extendee.Handle(event, signal, name)";
-
+		
 		public static void Register(Funcis funcis)
 		{
 			var node = funcis.CreateNode("You", new string[] { "Extendee" });
-			File.WriteAllText(Path.Combine(funcis.GetWatchedPath(), "signalSetup.is"), signalSetup.Replace("\r\n", "\n"));
+
+			var path = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location) + funcis.sigPath;
+			File.WriteAllText(Path.Combine(path, "signalSetup.is"), signalSetup);
 			node["Handle"] = new FuncEx((sig, args, cb) =>
 			{
 				if (args.Count < 3)
@@ -37,7 +40,7 @@ namespace FuncisSharp
 				{
 					if (ev == "loaded")
 					{
-						File.WriteAllText(Path.Combine(funcis.GetWatchedPath(), name), signal.Replace("\n", "\r\n"));
+						File.WriteAllText(Path.Combine(funcis.GetWatchedPath(), name), signal);
 					}
 					else if (ev == "removed")
 					{

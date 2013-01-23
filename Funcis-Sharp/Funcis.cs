@@ -19,14 +19,13 @@ namespace FuncisSharp
 		
 		private Dictionary<string, Signal> _signals = new Dictionary<string, Signal>();
 		private readonly object _sigLock = new object();
-		private string sigPath { get; set; }
+		public string sigPath { get; set; }
 
 		public Funcis(string sigPath = @"\Signals")
 		{
 			locals = new NodeMap<LocalNode>();
 			remotes = new NodeMap<RemoteNode>();
 			this.sigPath = sigPath;
-			startFSWatch();
 		}
 
 		public async Task Listen()
@@ -215,6 +214,7 @@ namespace FuncisSharp
 
 		public async Task Start()
 		{
+			startFSWatch();
 			List<Signal> sigs = null;
 			lock (_sigLock)
 			{

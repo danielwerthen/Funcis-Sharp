@@ -10,6 +10,8 @@ using Newtonsoft.Json.Linq;
 using Knx.Infrastructure.DataTypes;
 using Knx.Infrastructure;
 using System.Threading;
+using System.IO;
+using System.Net;
 
 namespace KnxNode
 {
@@ -17,9 +19,36 @@ namespace KnxNode
 	{
 		static void Main(string[] argss)
 		{
+			/*var webReq = WebRequest.CreateHttp("http://kod-test.azurewebsites.net");
+			//var webReq = WebRequest.CreateHttp("http://localhost:3051/hello.js");
+			//var webReq = WebRequest.CreateHttp("http://polar-sands-2139.herokuapp.com");
+			webReq.Timeout = 30000;
+			webReq.Method = "POST";
+			webReq.SendChunked = true;
+			webReq.KeepAlive = true;
+
+			using (var req = new StreamWriter(webReq.GetRequestStream()))
+			{
+				req.Write("Hello");
+				req.Flush();
+			}
+			using (var response = webReq.GetResponse())
+			{
+				using (var res = new StreamReader(response.GetResponseStream()))
+				{
+					while (!res.EndOfStream)
+					{
+						Console.Write((char)res.Read());
+					}
+					Console.ReadLine();
+				}
+			}
+			return;*/
 			var url = argss.Count() > 0 ? argss[0] : "http://kod-test.azurewebsites.net/";
+			//var url = argss.Count() > 0 ? argss[0] : "http://localhost:3000";
 			Console.WriteLine("Proxying to url: " + url);
-			AppDomain.CurrentDomain.UnhandledException += (sender, e) => {
+			AppDomain.CurrentDomain.UnhandledException += (sender, e) =>
+			{
 				var ex = e.ExceptionObject as Exception;
 				Console.WriteLine("Exited by unknown error: " + ex.Message);
 				var p = System.Diagnostics.Process.GetCurrentProcess();
@@ -36,15 +65,15 @@ namespace KnxNode
 					if (args.Count < 1)
 						return;
 					EnmxAddress address = (string)args[0];
-                    Console.WriteLine("Listen to " + address.Address);
-					gate.ConstructGate<int>(address, new Action<int,GroupTelegram>((val, telegram) =>
+					Console.WriteLine("Listen to " + address.Address);
+					gate.ConstructGate<int>(address, new Action<int, GroupTelegram>((val, telegram) =>
 					{
-                        Console.WriteLine("Received from " + address.Address + " value of " + val);
+						Console.WriteLine("Received from " + address.Address + " value of " + val);
 						cb(new JArray(val, telegram.Received));
 					}));
 					sig.OnStop(new Action(() =>
 					{
-                        Console.WriteLine("Stop listen to " + address.Address);
+						Console.WriteLine("Stop listen to " + address.Address);
 						gate.RemoveGate(address);
 					}));
 				}));
@@ -69,7 +98,7 @@ namespace KnxNode
 				{
 					Thread.Sleep(1000);
 				}
-				
+
 			}, true);
 			return;
 		}
