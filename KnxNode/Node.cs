@@ -19,31 +19,6 @@ namespace KnxNode
 	{
 		static void Main(string[] argss)
 		{
-			/*var webReq = WebRequest.CreateHttp("http://kod-test.azurewebsites.net");
-			//var webReq = WebRequest.CreateHttp("http://localhost:3051/hello.js");
-			//var webReq = WebRequest.CreateHttp("http://polar-sands-2139.herokuapp.com");
-			webReq.Timeout = 30000;
-			webReq.Method = "POST";
-			webReq.SendChunked = true;
-			webReq.KeepAlive = true;
-
-			using (var req = new StreamWriter(webReq.GetRequestStream()))
-			{
-				req.Write("Hello");
-				req.Flush();
-			}
-			using (var response = webReq.GetResponse())
-			{
-				using (var res = new StreamReader(response.GetResponseStream()))
-				{
-					while (!res.EndOfStream)
-					{
-						Console.Write((char)res.Read());
-					}
-					Console.ReadLine();
-				}
-			}
-			return;*/
 			var url = argss.Count() > 0 ? argss[0] : "http://kod-test.azurewebsites.net/";
 			//var url = argss.Count() > 0 ? argss[0] : "http://localhost:3000";
 			Console.WriteLine("Proxying to url: " + url);
