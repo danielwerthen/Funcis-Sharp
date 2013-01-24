@@ -15,10 +15,14 @@ namespace FuncisSharp
 		private int IndentLvl { get; set; }
 		private int IndentPrev { get; set; }
 
+        private string Scrub(string str)
+        {
+            return str.Replace("\r", "");
+        }
 
 		public Parser(string str)
 		{
-			this.Input = str;
+			this.Input = Scrub(str);
 			this.Lineno = 1;
 			this.IndentLvl = 0;
 			this.IndentPrev = 0;
