@@ -121,6 +121,8 @@ namespace EtsProjectTranslator
 
 		public static string RoomValue(this DeviceInstance dev)
 		{
+            if (dev.Building == null)
+                return null;
 			var rooms = new BuildingPart[] { dev.Building, dev.Building.Parent, (dev.Building.Parent == null ? null : dev.Building.Parent.Parent) };
 			return string.Join(" - ", rooms.Where(row => row != null).Select(row => row.Name).ToArray());
 		}
